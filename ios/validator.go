@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -80,10 +79,6 @@ func (v *Validator) Validate(ctx context.Context, receipt string, environment st
 		return nil, fmt.Errorf("http request failure: %v", err)
 	}
 	defer res.Body.Close()
-
-	bodyBytes, _ := ioutil.ReadAll(res.Body)
-	bodyString := string(bodyBytes)
-	fmt.Println("\n\n", bodyString, "\n\n")
 
 	var response ValidationResponse
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
@@ -158,6 +153,8 @@ type ValidationResponse struct {
 	// Only returned for iOS 6 style transaction receipts, for an auto-renewable subscription.
 	// The JSON representation of the receipt for the expired subscription.
 	LatestExpiredReceiptInfo []InApp `json:"latest_expired_receipt_info,omitempty"`
+	// A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
+	PendingRenewalInfo []PendingRenewalInfo `json:"pending_renewal_info,omitempty"`
 	// Retry validation for this receipt. Only applicable to status codes 21100-21199
 	IsRetryable string `json:"is-retryable,omitempty"`
 }
