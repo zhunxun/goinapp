@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -79,6 +80,10 @@ func (v *Validator) Validate(ctx context.Context, receipt string, environment st
 		return nil, fmt.Errorf("http request failure: %v", err)
 	}
 	defer res.Body.Close()
+
+	bodyBytes, _ := ioutil.ReadAll(res.Body)
+	bodyString := string(bodyBytes)
+	fmt.Println("\n\n", bodyString, "\n\n")
 
 	var response ValidationResponse
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
