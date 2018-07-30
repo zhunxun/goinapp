@@ -164,8 +164,7 @@ func (c ValidationResponse) TrialOriginalTransactionId() string {
 		for _, receipt := range c.LatestReceiptInfo {
 			if receipt.IsTrialPeriod == "false" {
 				continue
-			}
-			if receipt.IsTrialPeriod == "true" {
+			} else if receipt.IsTrialPeriod == "true" {
 				trialOTID = receipt.OriginalTransactionID
 				break
 			}
@@ -180,11 +179,11 @@ func (c ValidationResponse) PaidOriginalTransactionId() string {
 		for _, receipt := range c.LatestReceiptInfo {
 			if receipt.IsTrialPeriod == "true" {
 				continue
-			}
-			if receipt.IsTrialPeriod == "false" {
+			} else if receipt.IsTrialPeriod == "false" {
 				paidOTID = receipt.OriginalTransactionID
 				break
 			}
+
 		}
 	}
 	return paidOTID
