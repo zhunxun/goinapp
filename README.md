@@ -1,8 +1,10 @@
 # goinapp - In-App Purchase validation library
 
+Library now on active development so don't use it on production until version v.1!  
+
 ## Features
 
-goinapp - small library for server to server in-app validation. It has a bunch of useful methods for extract ad process receipt data.
+goinapp - Small library for server to server in-app validation. It has a bunch of useful methods for extract ad process receipt data.
 
 ### Supported Platforms
 

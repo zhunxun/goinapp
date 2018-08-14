@@ -17,7 +17,9 @@ type Notification struct {
 	// You can use this value to relate multiple iOS 6-style transaction receipts for an individual customer’s subscription.
 	OriginalTransactionId string `json:"original_transaction_id"`
 	// The time and date that a transaction was cancelled by Apple customer support. Posted only if the notification_type is CANCEL.
-	CancellationDate
+	CancellationDate    string `json:"cancellation_date,omitempty"`
+	CancellationDateMS  string `json:"cancellation_date_ms,omitempty"`
+	CancellationDatePST string `json:"cancellation_date_pst,omitempty"`
 	// The primary key for identifying a subscription purchase. Posted only if the notification_type is CANCEL.
 	WebOrderLineItemID string `json:"web_order_line_item_id"`
 	// Posted if the notification_type is RENEWAL or INTERACTIVE_RENEWAL, and only if the renewal is successful.
