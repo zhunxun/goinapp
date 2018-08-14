@@ -39,9 +39,9 @@ func NewValidatorWithClient(client *http.Client, password string) *Validator {
 
 // Validate send http POST request with receipt to AppStore backend and parse the response.
 // receipt must be a base64 encoded string from your StoreKit.
-// environment must be a string value of: "productionEnv", "sandboxEnv" or you can pass any valid URL,
+// environment must be a string value of: "productionEnv", "sandboxEnv" or you can pass any valid url,
 // to send request to your proxy for example.
-func (v *Validator) Validate(ctx context.Context, receipt string, environment env.environment) (*ValidationResponse, error) {
+func (v *Validator) Validate(ctx context.Context, receipt string, environment env.Environment) (*ValidationResponse, error) {
 	payload := ValidationRequest{
 		ReceiptData: receipt,
 		Password:    v.password,
@@ -73,8 +73,8 @@ func (v *Validator) Validate(ctx context.Context, receipt string, environment en
 
 // ValidationRequest type has the request properties.
 // Submit this struct as JSON payload of an HTTP POST request to AppStore backend.
-// In the test environment, use https://sandbox.itunes.apple.com/verifyReceipt as the URL.
-// In production, use https://buy.itunes.apple.com/verifyReceipt as the URL.
+// In the test environment, use https://sandbox.itunes.apple.com/verifyReceipt as the url.
+// In production, use https://buy.itunes.apple.com/verifyReceipt as the url.
 // See Apple docs:
 // https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateRemotely.html
 type ValidationRequest struct {

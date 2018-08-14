@@ -1,52 +1,38 @@
+// TODO package docs
 package env
 
 const (
-	// sandboxURL is endpoint URL for sandbox environment.
-	sandboxURL = "https://sandbox.itunes.apple.com/verifyReceipt"
-
-	// productionURL is endpoint URL for production environment.
+	sandboxURL    = "https://sandbox.itunes.apple.com/verifyReceipt"
 	productionURL = "https://buy.itunes.apple.com/verifyReceipt"
 )
 
-// environment interface encapsulate different endpoint realization
-type environment interface {
+// Environment interface provide ability to chose one of the URL for validation in-app purchases.
+type Environment interface {
 	URL() string
 }
 
-// productionEnv type represent productionEnv environment URL option
-type productionEnv string
+// production type represent production environment URL option.
+type production string
 
-// URL implement environment interface for productionEnv type
-func (p productionEnv) URL() string {
+// URL implement Environment interface for production type.
+func (p production) URL() string {
 	return productionURL
 }
 
-func Production() *productionEnv {
-	return new(productionEnv)
+// Production set validation endpoint to production URL by returning production type that implements Environment interface.
+func Production() *production {
+	return new(production)
 }
 
-// sandboxEnv type represent sandboxEnv environment URL option
-type sandboxEnv string
+// sandbox type represent sandbox environment URL option.
+type sandbox string
 
-// URL implement environment interface
-func (s sandboxEnv) URL() string {
+// URL implement Environment interface for sandbox type.
+func (s sandbox) URL() string {
 	return sandboxURL
 }
 
-func Sandbox() *sandboxEnv {
-	return new(sandboxEnv)
-}
-
-// endpointEnv type represent custom URL option for sending request to any provided endpoint
-type endpointEnv struct {
-	url string
-}
-
-// URL implement environment interface
-func (e endpointEnv) URL() string {
-	return e.url
-}
-
-func Endpoint(url string) *endpointEnv {
-	return &endpointEnv{url: url}
+// Sandbox set validation endpoint to production URL by returning sandbox type that implements Environment interface.
+func Sandbox() *sandbox {
+	return new(sandbox)
 }
