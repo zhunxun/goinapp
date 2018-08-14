@@ -45,7 +45,6 @@ type Receipt struct {
 	ReceiptRequestDate    string `json:"request_date,omitempty"`
 	ReceiptRequestDateMS  string `json:"request_date_ms,omitempty"`
 	ReceiptRequestDatePST string `json:"request_date_pst,omitempty"`
-
 	// Undocumented field
 	AdamID int `json:"adam_id"`
 	// Undocumented field

@@ -13,28 +13,40 @@ type Environment interface {
 	URL() string
 }
 
-// Production type represent Production environment URL option
-type Production string
+// productionEnv type represent productionEnv environment URL option
+type productionEnv string
 
-// URL implement Environment interface
-func (p Production) URL() string {
+// URL implement Environment interface for productionEnv type
+func (p productionEnv) URL() string {
 	return productionURL
 }
 
-// Sandbox type represent Sandbox environment URL option
-type Sandbox string
+func Production() *productionEnv {
+	return new(productionEnv)
+}
+
+// sandboxEnv type represent sandboxEnv environment URL option
+type sandboxEnv string
 
 // URL implement Environment interface
-func (s Sandbox) URL() string {
+func (s sandboxEnv) URL() string {
 	return sandboxURL
 }
 
-// Endpoint type represent custom URL option for sending request to any provided endpoint
-type Endpoint struct {
+func Sandbox() *sandboxEnv {
+	return new(sandboxEnv)
+}
+
+// endpointEnv type represent custom URL option for sending request to any provided endpoint
+type endpointEnv struct {
 	url string
 }
 
 // URL implement Environment interface
-func (e Endpoint) URL() string {
+func (e endpointEnv) URL() string {
 	return e.url
+}
+
+func Endpoint(url string) *endpointEnv {
+	return &endpointEnv{url: url}
 }

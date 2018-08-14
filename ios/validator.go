@@ -39,7 +39,7 @@ func NewValidatorWithClient(client *http.Client, password string) *Validator {
 
 // Validate send http POST request with receipt to AppStore backend and parse the response.
 // receipt must be a base64 encoded string from your StoreKit.
-// environment must be a string value of: "Production", "Sandbox" or you can pass any valid URL,
+// environment must be a string value of: "productionEnv", "sandboxEnv" or you can pass any valid URL,
 // to send request to your proxy for example.
 func (v *Validator) Validate(ctx context.Context, receipt string, environment env.Environment) (*ValidationResponse, error) {
 	payload := ValidationRequest{
