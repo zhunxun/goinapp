@@ -41,7 +41,7 @@ func NewValidatorWithClient(client *http.Client, password string) *Validator {
 // receipt must be a base64 encoded string from your StoreKit.
 // environment must be a string value of: "productionEnv", "sandboxEnv" or you can pass any valid URL,
 // to send request to your proxy for example.
-func (v *Validator) Validate(ctx context.Context, receipt string, environment env.Environment) (*ValidationResponse, error) {
+func (v *Validator) Validate(ctx context.Context, receipt string, environment env.environment) (*ValidationResponse, error) {
 	payload := ValidationRequest{
 		ReceiptData: receipt,
 		Password:    v.password,

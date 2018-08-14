@@ -8,15 +8,15 @@ const (
 	productionURL = "https://buy.itunes.apple.com/verifyReceipt"
 )
 
-// Environment interface encapsulate different endpoint realization
-type Environment interface {
+// environment interface encapsulate different endpoint realization
+type environment interface {
 	URL() string
 }
 
 // productionEnv type represent productionEnv environment URL option
 type productionEnv string
 
-// URL implement Environment interface for productionEnv type
+// URL implement environment interface for productionEnv type
 func (p productionEnv) URL() string {
 	return productionURL
 }
@@ -28,7 +28,7 @@ func Production() *productionEnv {
 // sandboxEnv type represent sandboxEnv environment URL option
 type sandboxEnv string
 
-// URL implement Environment interface
+// URL implement environment interface
 func (s sandboxEnv) URL() string {
 	return sandboxURL
 }
@@ -42,7 +42,7 @@ type endpointEnv struct {
 	url string
 }
 
-// URL implement Environment interface
+// URL implement environment interface
 func (e endpointEnv) URL() string {
 	return e.url
 }
