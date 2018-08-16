@@ -27,7 +27,7 @@ type Receipt struct {
 	// The date when the app receipt was created.
 	// When validating a receipt, use this date to validate the receipt’s signature.
 	ReceiptCreationDate    string `json:"receipt_creation_date,omitempty"`
-	ReceiptCreationDateMS  string `json:"receipt_creation_date_ms,omitempty"`
+	ReceiptCreationDateMS  int64  `json:"receipt_creation_date_ms,omitempty"`
 	ReceiptCreationDatePST string `json:"receipt_creation_date_pst,omitempty"`
 	// The date that the app receipt expires.
 	// This key is present only for apps purchased through the Volume Purchase Program.
@@ -35,15 +35,15 @@ type Receipt struct {
 	// When validating a receipt, compare this date to the current date to determine whether the receipt is expired.
 	// Do not try to use this date to calculate any other information, such as the time remaining before expiration.
 	ReceiptExpirationDate    string `json:"receipt_expiration_date,omitempty"`
-	ReceiptExpirationDateMS  string `json:"receipt_expiration_date_ms,omitempty"`
+	ReceiptExpirationDateMS  int64  `json:"receipt_expiration_date_ms,omitempty,string"`
 	ReceiptExpirationDatePST string `json:"receipt_expiration_date_pst,omitempty"`
 	// OriginalPurchaseDate type indicates the beginning of the subscription period
 	OriginalPurchaseDate    string `json:"original_purchase_date,omitempty"`
-	OriginalPurchaseDateMS  string `json:"original_purchase_date_ms,omitempty"`
+	OriginalPurchaseDateMS  int64  `json:"original_purchase_date_ms,omitempty,string"`
 	OriginalPurchaseDatePST string `json:"original_purchase_date_pst,omitempty"`
 	// ReceiptRequestDate type indicates the date and time that the request was sent
 	ReceiptRequestDate    string `json:"request_date,omitempty"`
-	ReceiptRequestDateMS  string `json:"request_date_ms,omitempty"`
+	ReceiptRequestDateMS  int64  `json:"request_date_ms,omitempty,string"`
 	ReceiptRequestDatePST string `json:"request_date_pst,omitempty"`
 	// Undocumented field
 	AdamID int `json:"adam_id"`
