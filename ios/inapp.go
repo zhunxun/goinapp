@@ -160,10 +160,41 @@ func (i InApp) Expired() bool {
 	return false
 }
 
-//func (i InApp) Status() SubscriptionStatus {
-//	trial := i.IsTrialPeriod
-//}
+// Trial return true if subscription is in trial period
+func (i InApp) Trial() bool {
+	return i.IsTrialPeriod
+}
 
+// Status return subscription status
+func (i InApp) Status() SubscriptionStatus {
+	switch {
+	case i.Canceled():
+		return Canceled
+	case i.Expired():
+		return Expired
+	case i.Pending():
+		return Pending
+	case i.Trial():
+		return Trial
+	default:
+		return Paid
+	}
+}
+
+// Pending return true if subscription is in pending
+func (i InApp) Pending() bool {
+	if i.IsInBillingRetryPeriod != "" {
+		switch i.IsInBillingRetryPeriod {
+		case "0":
+			return false
+		case "1":
+			return true
+		}
+	}
+	return false
+}
+
+// Canceled return true if subscription was canceled
 func (i InApp) Canceled() bool {
 	if i.AutoRenewStatus != "" {
 		switch i.AutoRenewStatus {
@@ -174,6 +205,9 @@ func (i InApp) Canceled() bool {
 		}
 	}
 	if i.CancellationReason != "" {
+		return true
+	}
+	if i.CancellationDateMS > 0 {
 		return true
 	}
 	return false
