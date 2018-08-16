@@ -101,14 +101,14 @@ type ValidationResponse struct {
 	// Base64 encoded string
 	LatestReceipt string `json:"latest_receipt,omitempty"`
 	// Only returned for receipts containing auto-renewable subscriptions
-	LatestReceiptInfo []InApp `json:"latest_receipt_info,omitempty"`
+	LatestReceiptInfo InApps `json:"latest_receipt_info,omitempty"`
 	// Only returned for iOS 6 style transaction receipts, for an auto-renewable subscription.
 	// The JSON representation of the receipt for the expired subscription.
-	LatestExpiredReceiptInfo []InApp `json:"latest_expired_receipt_info,omitempty"`
+	LatestExpiredReceiptInfo InApps `json:"latest_expired_receipt_info,omitempty"`
 	// A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
 	PendingRenewalInfo []PendingRenewalInfo `json:"pending_renewal_info,omitempty"`
 	// Retry validation for this receipt. Only applicable to status codes 21100-21199
-	IsRetryable string `json:"is-retryable,omitempty"`
+	IsRetryable bool `json:"is-retryable,string,omitempty"`
 }
 
 // A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
@@ -159,40 +159,4 @@ func (v *ValidationResponse) Renewable() bool {
 		return true
 	}
 	return false
-}
-
-// TrialOriginalTransactionID return string representation of Original Transaction ID for
-func (v *ValidationResponse) TrialOriginalTransactionID() string {
-	var trialOTID string
-	if len(v.Receipt.InApp) > 0 {
-		for _, inapp := range v.Receipt.InApp {
-			if inapp.IsTrialPeriod == "false" {
-				continue
-			} else if inapp.IsTrialPeriod == "true" {
-				trialOTID = inapp.OriginalTransactionID
-				break
-			}
-		}
-	}
-	return trialOTID
-}
-
-// PaidOriginalTransactionID
-func (v *ValidationResponse) PaidOriginalTransactionID() string {
-	var paidOTID string
-	if len(v.Receipt.InApp) > 0 {
-		for _, inapp := range v.Receipt.InApp {
-			if inapp.IsTrialPeriod == "true" {
-				continue
-			} else if inapp.IsTrialPeriod == "false" {
-				paidOTID = inapp.OriginalTransactionID
-				break
-			}
-		}
-	}
-	return paidOTID
-}
-
-func (v ValidationResponse) LatestInApp() InApp {
-	return v.Receipt.InApp.Sorted(ByPurchaseDate)[0]
 }

@@ -1,7 +1,34 @@
 package ios
 
+import (
+	"time"
+)
+
+type SubscriptionStatus int
+
+const (
+	Trial SubscriptionStatus = iota
+	Paid
+	Expired
+	Pending
+	Canceled
+)
+
+func (s SubscriptionStatus) String() string {
+	statuses := [...]string{
+		"Trial",
+		"Paid",
+		"Expired",
+		"Pending",
+		"Canceled",
+	}
+	return statuses[s]
+}
+
+// InApps type represent an array of InApp with bunch of useful methods
 type InApps []InApp
 
+// InApp type represent iOS in-app purchase properties
 type InApp struct {
 	// The number of items purchased.
 	Quantity string `json:"quantity"`
@@ -21,18 +48,18 @@ type InApp struct {
 	// In an auto-renewable subscription receipt, the purchase date is the date when the subscription was either purchased or renewed (with or without a lapse).
 	// For an automatic renewal that occurs on the expiration date of the current period, the purchase date is the start date of the next period, which is identical to the end date of the current period.
 	PurchaseDate    string `json:"purchase_date,omitempty"`
-	PurchaseDateMS  string `json:"purchase_date_ms,omitempty"`
+	PurchaseDateMS  int64  `json:"purchase_date_ms,omitempty,string"`
 	PurchaseDatePST string `json:"purchase_date_pst,omitempty"`
 	// For a transaction that restores a previous transaction, the date of the original transaction.
 	// In an auto-renewable subscription receipt, this indicates the beginning of the subscription period, even if the subscription has been renewed.
 	OriginalPurchaseDate    string `json:"original_purchase_date,omitempty"`
-	OriginalPurchaseDateMS  string `json:"original_purchase_date_ms,omitempty"`
+	OriginalPurchaseDateMS  int64  `json:"original_purchase_date_ms,omitempty,string"`
 	OriginalPurchaseDatePST string `json:"original_purchase_date_pst,omitempty"`
 	// The expiration date for the subscription, expressed as the number of milliseconds since January 1, 1970, 00:00:00 GMT.
 	// This key is only present for auto-renewable subscription receipts. Use this value to identify the date when the subscription will renew or expire, to determine if a customer should have access to content or service.
 	// After validating the latest receipt, if the subscription expiration date for the latest renewal transaction is a past date, it is safe to assume that the subscription has expired.
 	ExpiresDate             string `json:"expires_date,omitempty"`
-	ExpiresDateMS           string `json:"expires_date_ms,omitempty"`
+	ExpiresDateMS           int64  `json:"expires_date_ms,omitempty,string"`
 	ExpiresDatePST          string `json:"expires_date_pst,omitempty"`
 	ExpiresDateFormatted    string `json:"expires_date_formatted,omitempty"`
 	ExpiresDateFormattedPST string `json:"expires_date_formatted_pst,omitempty"`
@@ -44,20 +71,20 @@ type InApp struct {
 	// “5” - Unknown error.
 	// This key is only present for a receipt containing an expired auto-renewable subscription.
 	// You can use this value to decide whether to display appropriate messaging in your app for customers to resubscribe.
-	ExpirationIntent string `json:"expiration_intent"`
+	ExpirationIntent string `json:"expiration_intent,omitempty"`
 	// For an expired subscription, whether or not Apple is still attempting to automatically renew the subscription.
 	// “1” - App Store is still attempting to renew the subscription.
 	// “0” - App Store has stopped attempting to renew the subscription.
 	// This key is only present for auto-renewable subscription receipts.
 	// If the customer’s subscription failed to renew because the App Store was unable to complete the transaction,
 	// this value will reflect whether or not the App Store is still trying to renew the subscription.
-	IsInBillingRetryPeriod string `json:"is_in_billing_retry_period"`
+	IsInBillingRetryPeriod string `json:"is_in_billing_retry_period,omitempty"`
 	// For a subscription, whether or not it is in the free trial period.
 	// This key is only present for auto-renewable subscription receipts.
 	// The value for this key is "true" if the customer’s subscription is currently in the free trial period, or "false" if not.
 	// Note: If a previous subscription period in the receipt has the value “true” for either the is_trial_period or the is_in_intro_offer_period key,
 	// the user is not eligible for a free trial or introductory price within that subscription group.
-	IsTrialPeriod string `json:"is_trial_period"`
+	IsTrialPeriod bool `json:"is_trial_period,string"`
 	// For an auto-renewable subscription, whether or not it is in the introductory price period.
 	// This key is only present for auto-renewable subscription receipts.
 	// The value for this key is "true" if the customer’s subscription is currently in an introductory price period, or "false" if not.
@@ -71,7 +98,7 @@ type InApp struct {
 	// Only applicable if the refund was for a non-consumable product, an auto-renewable subscription,
 	// a non-renewing subscription, or for a free subscription.
 	CancellationDate    string `json:"cancellation_date,omitempty"`
-	CancellationDateMS  string `json:"cancellation_date_ms,omitempty"`
+	CancellationDateMS  int64  `json:"cancellation_date_ms,omitempty,string"`
 	CancellationDatePST string `json:"cancellation_date_pst,omitempty"`
 	// For a transaction that was canceled, the reason for cancellation.
 	// “1” - Customer canceled their transaction due to an actual or perceived issue within your app.
@@ -107,5 +134,50 @@ type InApp struct {
 	// “0” - Customer has not taken action regarding the increased price. Subscription expires if the customer takes no action before the renewal date.
 	// This key is only present for auto-renewable subscription receipts if the subscription price was increased without keeping the existing price for active subscribers.
 	// You can use this value to track customer adoption of the new price and take appropriate action.
-	PriceConsentStatus string `json:"price_consent_status"`
+	PriceConsentStatus string `json:"price_consent_status,omitempty"`
 }
+
+// LatestInApp return latest element from an array of InApp sorted by OriginalPurchaseDate
+func (i InApps) LatestInApp() *InApp {
+	if len(i) <= 0 {
+		return nil
+	}
+	return &i.Sorted(ByOriginalPurchaseDate)[0]
+}
+
+// Len return the length of InApp array
+func (i InApps) Len() int {
+	return len(i)
+}
+
+// Expired return true if expiration date was before current date
+func (i InApp) Expired() bool {
+	expiration, _ := parseDateMS(i.ExpiresDateMS)
+	if expiration.Before(time.Now()) {
+		return true
+	}
+	return false
+}
+
+//func (i InApp) Status() SubscriptionStatus {
+//	trial := i.IsTrialPeriod
+//}
+//
+//func (i InApp) Canceled() (bool, error) {
+//	if i.AutoRenewStatus != "" {
+//		switch i.AutoRenewStatus {
+//		case "0":
+//			return true, nil
+//		}
+//	}
+//
+//	switch i.AutoRenewStatus {
+//	case "":
+//		return false, fmt.Errorf("receipt subscription is not auto-renewable")
+//	case "0":
+//		return true, nil
+//	case "1":
+//		return false, nil
+//	}
+//	return false, fmt.Errorf("unknown error")
+//}

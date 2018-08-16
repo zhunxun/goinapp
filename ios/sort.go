@@ -2,7 +2,6 @@ package ios
 
 import (
 	"sort"
-	"strconv"
 	"time"
 )
 
@@ -14,19 +13,16 @@ const (
 )
 
 func (i InApps) Sorted(by SortType) InApps {
-	inapps := i
 	switch by {
 	case ByPurchaseDate:
-		sort.Sort(byPurchaseDate(inapps))
+		sort.Sort(byPurchaseDate(i))
 	case ByOriginalPurchaseDate:
-		sort.Sort(byOriginalPurchaseDate(inapps))
-	default:
-		return inapps
+		sort.Sort(byOriginalPurchaseDate(i))
 	}
-	return inapps
+	return i
 }
 
-// byPurchaseDate type implements sort.Interface and used to sort an array pf in-apps by purchase date
+// byPurchaseDate type implements sort.Interface and used to sort an array ff in-apps by purchase date
 type byPurchaseDate InApps
 
 func (b byPurchaseDate) Len() int      { return len(b) }
@@ -37,7 +33,7 @@ func (b byPurchaseDate) Less(i, j int) bool {
 	return bi.Before(*bj)
 }
 
-// byOriginalPurchaseDate type implements sort.Interface and used to sort an array pf in-apps by original purchase date
+// byOriginalPurchaseDate type implements sort.Interface and used to sort an array of in-apps by original purchase date
 type byOriginalPurchaseDate InApps
 
 func (b byOriginalPurchaseDate) Len() int      { return len(b) }
@@ -48,11 +44,12 @@ func (b byOriginalPurchaseDate) Less(i, j int) bool {
 	return bi.Before(*bj)
 }
 
-func parseDateMS(timeMS string) (*time.Time, error) {
-	parseInt, err := strconv.ParseInt(timeMS, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-	parseTime := time.Unix(0, parseInt*int64(time.Millisecond))
+func parseDateMS(timeMS int64 /*string*/) (*time.Time, error) {
+	//parseInt, err := strconv.Atoi(timeMS)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//parseTime := time.Unix(0, int64(parseInt)*int64(time.Millisecond))
+	parseTime := time.Unix(0, timeMS*int64(time.Millisecond))
 	return &parseTime, nil
 }
