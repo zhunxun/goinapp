@@ -27,7 +27,7 @@ type Receipt struct {
 	// The date when the app receipt was created.
 	// When validating a receipt, use this date to validate the receipt’s signature.
 	ReceiptCreationDate    string `json:"receipt_creation_date,omitempty"`
-	ReceiptCreationDateMS  int    `json:"receipt_creation_date_ms,omitempty"`
+	ReceiptCreationDateMS  int64  `json:"receipt_creation_date_ms,omitempty,string"`
 	ReceiptCreationDatePST string `json:"receipt_creation_date_pst,omitempty"`
 	// The date that the app receipt expires.
 	// This key is present only for apps purchased through the Volume Purchase Program.
