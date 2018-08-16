@@ -106,10 +106,12 @@ type ValidationResponse struct {
 	// The JSON representation of the receipt for the expired subscription.
 	LatestExpiredReceiptInfo InApps `json:"latest_expired_receipt_info,omitempty"`
 	// A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
-	PendingRenewalInfo []PendingRenewalInfo `json:"pending_renewal_info,omitempty"`
+	PendingRenewalInfo PendingRenewalInfos `json:"pending_renewal_info,omitempty"`
 	// Retry validation for this receipt. Only applicable to status codes 21100-21199
 	IsRetryable bool `json:"is-retryable,string,omitempty"`
 }
+
+type PendingRenewalInfos []PendingRenewalInfo
 
 // A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
 type PendingRenewalInfo struct {
@@ -121,8 +123,8 @@ type PendingRenewalInfo struct {
 	SubscriptionPriceConsentStatus string `json:"price_consent_status"`
 }
 
-// CheckStatus method return an error is Status field of ValidationResponse not equal to 0.
-func (v *ValidationResponse) CheckStatus() error {
+// ValidationStatus method return an error is Status field of ValidationResponse not equal to 0.
+func (v *ValidationResponse) ValidationStatus() error {
 	var message string
 	switch v.Status {
 	case 0:

@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// SubscriptionStatus represent enumeration of subscription statuses
 type SubscriptionStatus int
 
 const (
@@ -90,7 +91,7 @@ type InApp struct {
 	// The value for this key is "true" if the customer’s subscription is currently in an introductory price period, or "false" if not.
 	// Note: If a previous subscription period in the receipt has the value “true” for either the is_trial_period or the is_in_intro_offer_period key,
 	// the user is not eligible for a free trial or introductory price within that subscription group.
-	IsInIntroOfferPeriod string `json:"is_in_intro_offer_period"`
+	IsInIntroOfferPeriod bool `json:"is_in_intro_offer_period,string"`
 	// For a transaction that was canceled by Apple customer support, the time and date of the cancellation.
 	// For an auto-renewable subscription plan that was upgraded, the time and date of the upgrade transaction.
 	// Treat a canceled receipt the same as if no purchase had ever been made.
@@ -145,14 +146,14 @@ func (i InApps) LatestInApp() *InApp {
 	return &i.Sorted(ByOriginalPurchaseDate)[0]
 }
 
-// Len return the length of InApp array
+// Len return the length of InApps array
 func (i InApps) Len() int {
 	return len(i)
 }
 
 // Expired return true if expiration date was before current date
 func (i InApp) Expired() bool {
-	expiration, _ := parseDateMS(i.ExpiresDateMS)
+	expiration := convertToTime(i.ExpiresDateMS)
 	if expiration.Before(time.Now()) {
 		return true
 	}
@@ -162,22 +163,18 @@ func (i InApp) Expired() bool {
 //func (i InApp) Status() SubscriptionStatus {
 //	trial := i.IsTrialPeriod
 //}
-//
-//func (i InApp) Canceled() (bool, error) {
-//	if i.AutoRenewStatus != "" {
-//		switch i.AutoRenewStatus {
-//		case "0":
-//			return true, nil
-//		}
-//	}
-//
-//	switch i.AutoRenewStatus {
-//	case "":
-//		return false, fmt.Errorf("receipt subscription is not auto-renewable")
-//	case "0":
-//		return true, nil
-//	case "1":
-//		return false, nil
-//	}
-//	return false, fmt.Errorf("unknown error")
-//}
+
+func (i InApp) Canceled() bool {
+	if i.AutoRenewStatus != "" {
+		switch i.AutoRenewStatus {
+		case "0":
+			return true
+		case "1":
+			return false
+		}
+	}
+	if i.CancellationReason != "" {
+		return true
+	}
+	return false
+}
