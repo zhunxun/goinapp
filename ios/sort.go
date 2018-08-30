@@ -33,7 +33,7 @@ func (b byPurchaseDate) Swap(i, j int) { b[i], b[j] = b[j], b[i] }
 func (b byPurchaseDate) Less(i, j int) bool {
 	bi := convertToTime(b[i].PurchaseDateMS)
 	bj := convertToTime(b[j].PurchaseDateMS)
-	return bi.Before(bj)
+	return bi.After(bj)
 }
 
 // byOriginalPurchaseDate type implements sort.Interface and used to sort an array of in-apps by original purchase date
@@ -44,5 +44,5 @@ func (b byOriginalPurchaseDate) Swap(i, j int) { b[i], b[j] = b[j], b[i] }
 func (b byOriginalPurchaseDate) Less(i, j int) bool {
 	bi := convertToTime(b[i].PurchaseDateMS)
 	bj := convertToTime(b[j].PurchaseDateMS)
-	return bi.Before(bj)
+	return bi.After(bj)
 }

@@ -15,13 +15,14 @@ const (
 	Canceled
 )
 
+// String return string representation of concrete SubscriptionStatus type
 func (s SubscriptionStatus) String() string {
 	statuses := [...]string{
-		"Trial",
-		"Paid",
-		"Expired",
-		"Pending",
-		"Canceled",
+		"trial",
+		"paid",
+		"expired",
+		"pending",
+		"canceled",
 	}
 	return statuses[s]
 }

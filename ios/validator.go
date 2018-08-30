@@ -94,9 +94,9 @@ type ValidationResponse struct {
 	// Represent apple validation status codes
 	Status int `json:"status"`
 	// Represent receipt environment
-	Environment string `json:"environment"`
+	Environment string `json:"environment,omitempty"`
 	// A JSON representation of the receipt that was sent for verification
-	Receipt Receipt `json:"receipt"`
+	Receipt Receipt `json:"receipt,omitempty"`
 	// Only returned for receipts containing auto-renewable subscriptions
 	// Base64 encoded string
 	LatestReceipt string `json:"latest_receipt,omitempty"`
@@ -111,9 +111,10 @@ type ValidationResponse struct {
 	IsRetryable bool `json:"is-retryable,string,omitempty"`
 }
 
+// PendingRenewalInfos
 type PendingRenewalInfos []PendingRenewalInfo
 
-// A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
+// PendingRenewalInfo A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
 type PendingRenewalInfo struct {
 	ProductID                      string `json:"product_id"`
 	SubscriptionExpirationIntent   string `json:"expiration_intent"`
