@@ -8,10 +8,15 @@ import (
 type SubscriptionStatus int
 
 const (
+	// Trial
 	Trial SubscriptionStatus = iota
+	// Paid
 	Paid
+	// Expired
 	Expired
+	// Pending
 	Pending
+	// Canceled
 	Canceled
 )
 

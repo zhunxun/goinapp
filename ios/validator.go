@@ -22,9 +22,7 @@ type Validator struct {
 // NewValidator return instance of Validator struct that contain http.Client with timeout of 10 seconds.
 func NewValidator(password string) *Validator {
 	return &Validator{
-		client: &http.Client{
-			Timeout: 10 * time.Second,
-		},
+		client:   &http.Client{Timeout: 10 * time.Second},
 		password: password,
 	}
 }
@@ -37,7 +35,7 @@ func NewValidatorWithClient(client *http.Client, password string) *Validator {
 	}
 }
 
-// Validate send http POST request with receipt to AppStore backend and parse the response.
+// Validate send http POST ValidationRequest with receipt to AppStore backend and parse the ValidationResponse.
 // receipt must be a base64 encoded string from your StoreKit.
 // environment must be a string value of: "productionEnv", "sandboxEnv" or you can pass any valid url,
 // to send request to your proxy for example.
@@ -83,11 +81,11 @@ type ValidationRequest struct {
 	// Only used for receipts that contain auto-renewable subscriptions
 	Password string `json:"password,omitempty"`
 	// Only used for iOS7 style app receipts that contain auto-renewable or non-renewing subscriptions.
-	// If value is true, response includes only the latest renewal transaction for any subscriptions.
+	// If value is true, ValidationResponse includes only the latest renewal transaction for any subscriptions.
 	ExcludeOldTransactions bool `json:"exclude-old-transactions,omitempty"`
 }
 
-// ValidationResponse type has the response properties.
+// ValidationResponse type has the ValidationResponse properties.
 // See Apple docs:
 // https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateRemotely.html
 type ValidationResponse struct {
@@ -124,36 +122,47 @@ type PendingRenewalInfo struct {
 	SubscriptionPriceConsentStatus string `json:"price_consent_status"`
 }
 
+var (
+	ErrMalformedJSON        = errors.New("the App Store could not read the JSON object you provided")
+	ErrMalformedReceiptData = errors.New("the data in the receipt-data property was malformed or missing")
+	ErrNotAuthenticated     = errors.New("the receipt could not be authenticated")
+	ErrIncorrectSecret      = errors.New("the shared secret you provided does not match the shared secret on file for your account")
+	ErrServerNotAvailable   = errors.New("the receipt server is not currently available")
+	ErrSandboxOnProduction  = errors.New("this receipt is from the test environment, but it was sent to the production environment for verification. Send it to the test environment instead")
+	ErrProductionOnSandbox  = errors.New("this receipt is from the production environment, but it was sent to the test environment for verification. Send it to the production environment instead")
+	ErrUnauthorizedReceipt  = errors.New("this receipt could not be authorized. Treat this the same as if a purchase was never made")
+	ErrInternalDataAccess   = errors.New("internal data access error")
+	ErrUnknown              = errors.New("an unknown error occurred")
+)
+
 // ValidationStatus method return an error is Status field of ValidationResponse not equal to 0.
 func (v *ValidationResponse) ValidationStatus() error {
-	var message string
 	switch v.Status {
 	case 0:
 		return nil
 	case 21000:
-		message = "The App Store could not read the JSON object you provided."
+		return ErrMalformedJSON
 	case 21002:
-		message = "The data in the receipt-data property was malformed or missing."
+		return ErrMalformedReceiptData
 	case 21003:
-		message = "The receipt could not be authenticated."
+		return ErrNotAuthenticated
 	case 21004:
-		message = "The shared secret you provided does not match the shared secret on file for your account."
+		return ErrIncorrectSecret
 	case 21005:
-		message = "The receipt server is not currently available."
+		return ErrServerNotAvailable
 	case 21007:
-		message = "This receipt is from the test environment, but it was sent to the production environment for verification. Send it to the test environment instead."
+		return ErrSandboxOnProduction
 	case 21008:
-		message = "This receipt is from the production environment, but it was sent to the test environment for verification. Send it to the production environment instead."
+		return ErrProductionOnSandbox
 	case 21010:
-		message = "This receipt could not be authorized. Treat this the same as if a purchase was never made."
+		return ErrUnauthorizedReceipt
 	default:
 		if v.Status >= 21100 && v.Status <= 21199 {
-			message = "Internal data access error."
+			return ErrInternalDataAccess
 		} else {
-			message = "An unknown error occurred."
+			return ErrUnknown
 		}
 	}
-	return errors.New(message)
 }
 
 // Renewable return true if receipt containing auto-renewable subscriptions

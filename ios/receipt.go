@@ -41,7 +41,7 @@ type Receipt struct {
 	OriginalPurchaseDate    string `json:"original_purchase_date,omitempty"`
 	OriginalPurchaseDateMS  int64  `json:"original_purchase_date_ms,string,omitempty"`
 	OriginalPurchaseDatePST string `json:"original_purchase_date_pst,omitempty"`
-	// ReceiptRequestDate type indicates the date and time that the request was sent
+	// ReceiptRequestDate type indicates the date and time that the ValidationRequest was sent
 	ReceiptRequestDate    string `json:"request_date,omitempty"`
 	ReceiptRequestDateMS  int64  `json:"request_date_ms,string,omitempty"`
 	ReceiptRequestDatePST string `json:"request_date_pst,omitempty"`

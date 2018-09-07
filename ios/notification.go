@@ -1,6 +1,6 @@
 package ios
 
-// Notification represent Apple status update notification request.
+// Notification represent Apple status update notification ValidationRequest.
 type Notification struct {
 	// Specifies whether the notification is for a sandbox or a production environment: Sandbox and PROD
 	Environment string `json:"environment"`
