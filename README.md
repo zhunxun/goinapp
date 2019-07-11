@@ -1,20 +1,18 @@
-# goinapp - In-App Purchase validation library
+# goinapp
 
-Library now on active development so don't use it on production until version v.1!  
+![GitHub](https://img.shields.io/github/license/heartwilltell/goinapp.svg)
+![](https://img.shields.io/badge/platform-ios-green.svg)
 
-## Features
+Library now on active development so don't use it on production until it reach the version v1.0 !!  
 
-goinapp - Small library for server to server in-app validation. It has a bunch of useful methods for extract ad process receipt data.
+## What Is In-App Purchasing?
+
+In-app purchasing refers to the buying of goods and services from inside an application on a device, such as a smartphone or tablet. 
+In-app purchases allow developers to provide their application for free. 
+The developer then advertises upgrades to the paid version, paid feature unlocks, special items for sale, or even ads other apps and services to anyone who downloads the free version. 
+This allows the developer to profit despite giving the basic app itself away for free.
 
 ### Supported Platforms
 
- - 👍 IOS 
- - 🤔 Android - coming soon!
- 
-### TODO
- - add tests
- - add cli for validating
- - add android support
- - add documentation
- - add examples
- - add logger interface
+ - IOS 
+ - Android - coming soon!

@@ -4,23 +4,23 @@ import (
 	"time"
 )
 
-// SubscriptionStatus represent enumeration of subscription statuses
+// SubscriptionStatus represent enumeration of subscription statuses.
 type SubscriptionStatus int
 
 const (
-	// Trial
+	// Trial represent subscription status
 	Trial SubscriptionStatus = iota
-	// Paid
+	// Paid represent subscription status
 	Paid
-	// Expired
+	// Expired represent subscription status
 	Expired
-	// Pending
+	// Pending represent subscription status
 	Pending
-	// Canceled
+	// Canceled represent subscription status
 	Canceled
 )
 
-// String return string representation of concrete SubscriptionStatus type
+// String return string representation of concrete SubscriptionStatus type.
 func (s SubscriptionStatus) String() string {
 	statuses := [...]string{
 		"trial",
@@ -32,10 +32,10 @@ func (s SubscriptionStatus) String() string {
 	return statuses[s]
 }
 
-// InApps type represent an array of InApp with bunch of useful methods
+// InApps type represent an array of InApp.
 type InApps []InApp
 
-// InApp type represent iOS in-app purchase properties
+// InApp type represent iOS in-app purchase property.
 type InApp struct {
 	// The number of items purchased.
 	Quantity string `json:"quantity"`
@@ -71,11 +71,11 @@ type InApp struct {
 	ExpiresDateFormatted    string `json:"expires_date_formatted,omitempty"`
 	ExpiresDateFormattedPST string `json:"expires_date_formatted_pst,omitempty"`
 	// For an expired subscription, the reason for the subscription expiration.
-	// “1” - Customer canceled their subscription.
-	// “2” - Billing error; for example customer’s payment information was no longer valid.
-	// “3” - Customer did not agree to a recent price increase.
-	// “4” - Product was not available for purchase at the time of renewal.
-	// “5” - Unknown error.
+	// “1” — Customer canceled their subscription.
+	// “2” — Billing error; for example customer’s payment information was no longer valid.
+	// “3” — Customer did not agree to a recent price increase.
+	// “4” — Product was not available for purchase at the time of renewal.
+	// “5” — Unknown error.
 	// This key is only present for a receipt containing an expired auto-renewable subscription.
 	// You can use this value to decide whether to display appropriate messaging in your app for customers to resubscribe.
 	ExpirationIntent string `json:"expiration_intent,omitempty"`
@@ -112,7 +112,7 @@ type InApp struct {
 	// “0” - Transaction was canceled for another reason, for example, if the customer made the purchase accidentally.
 	// Use this value along with the cancellation date to identify possible issues in your app that may lead customers to contact Apple customer support.
 	CancellationReason string `json:"cancellation_reason,omitempty"`
-	// A string that the App Store uses to uniquely identify the application that created the transaction.
+	// String that the App Store uses to uniquely identify the application that created the transaction.
 	// If your server supports multiple applications, you can use this value to differentiate between them.
 	// Apps are assigned an identifier only in the production environment, so this key is not present for receipts created in the test environment.
 	// This field is not present for Mac apps.
@@ -159,11 +159,7 @@ func (i InApps) Len() int {
 
 // Expired return true if expiration date was before current date
 func (i InApp) Expired() bool {
-	expiration := convertToTime(i.ExpiresDateMS)
-	if expiration.Before(time.Now()) {
-		return true
-	}
-	return false
+	return convertToTime(i.ExpiresDateMS).Before(time.Now())
 }
 
 // Trial return true if subscription is in trial period

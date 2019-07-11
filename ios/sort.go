@@ -8,7 +8,9 @@ import (
 type SortType int
 
 const (
+	// ByPurchaseDate represent sort type, which allow sorting by purchase date.
 	ByPurchaseDate SortType = iota
+	// ByOriginalPurchaseDate represent sort type, which allow sorting by original purchase date.
 	ByOriginalPurchaseDate
 )
 
@@ -25,7 +27,7 @@ func (i InApps) Sorted(by SortType) InApps {
 	return i
 }
 
-// byPurchaseDate type implements sort.Interface and used to sort an array ff in-apps by purchase date
+// byPurchaseDate type implements sort.Interface and used to sort an array of in-apps by purchase date
 type byPurchaseDate InApps
 
 func (b byPurchaseDate) Len() int      { return len(b) }
