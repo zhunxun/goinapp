@@ -1,6 +1,6 @@
 # goinapp
 
-![GitHub](https://img.shields.io/github/license/heartwilltell/goinapp.svg)
+![https://github.com/heartwilltell/goinapp/blob/master/LICENSE](https://img.shields.io/github/license/heartwilltell/goinapp.svg)
 ![](https://img.shields.io/badge/platform-ios-green.svg)
 
 Library now on active development so don't use it on production until it reach the version v1.0 !!  
