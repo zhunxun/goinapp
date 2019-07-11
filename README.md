@@ -1,7 +1,7 @@
 # goinapp
 
-![https://github.com/heartwilltell/goinapp/blob/master/LICENSE](https://img.shields.io/github/license/heartwilltell/goinapp.svg)
-![](https://img.shields.io/badge/platform-ios-green.svg)
+[![License](https://img.shields.io/github/license/heartwilltell/goinapp.svg)](https://github.com/heartwilltell/goinapp/blob/master/LICENSE)
+[![Platform](https://img.shields.io/badge/platform-ios-green.svg)](https://www.apple.com/ios)
 
 Library now on active development so don't use it on production until it reach the version v1.0 !!  
 
